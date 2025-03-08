@@ -23,7 +23,7 @@ function App() {
                     delegate: "GPU"
                 },
                 runningMode: "VIDEO",
-                numPoses: 1 //NUMBER OF PEOPLE IT WILL DETECT
+                numPoses: 5 //NUMBER OF PEOPLE IT WILL DETECT
             });
         }
         createPoseLandmarker();
@@ -70,9 +70,9 @@ function App() {
             canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
             results.landmarks.forEach(landmark => {
                 drawingUtils.drawLandmarks(landmark, {
-                    radius: (data) => DrawingUtils.lerp(data.from?.z, -0.15, 0.1, 5, 1)
+                    radius: (data) => DrawingUtils.lerp(data.from?.z, -0.15, 0.1, 0.5, 0.2) // circles setup
                 });
-                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
+                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS, {lineWidth: 0.5}); //initialize line thickness
             });
 
             if (webcamRunning) {
