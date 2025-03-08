@@ -23,7 +23,7 @@ function App() {
                     delegate: "GPU"
                 },
                 runningMode: "VIDEO",
-                numPoses: 2
+                numPoses: 1 //NUMBER OF PEOPLE IT WILL DETECT
             });
         }
         createPoseLandmarker();
@@ -90,9 +90,9 @@ function App() {
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
-            <div className="video-container">
-                <video ref={videoRef} autoPlay playsInline className="video" />
-                <canvas ref={canvasRef} className="canvas" />
+            <div className="video-container" style={{ position: 'relative', width: '640px', height: '480px' }}>
+                <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', height: '720px', position: 'absolute'}} />
+                <canvas ref={canvasRef} className="canvas" style={{width: '1280px', height: '720px', position: 'absolute'}}/>
             </div>
         </div>
     );
