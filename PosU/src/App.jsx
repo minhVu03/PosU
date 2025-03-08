@@ -1,103 +1,101 @@
-import React, { useState, useEffect } from 'react'
-import './App.css'
+import React, { useState, useEffect, useRef } from 'react';
+import './App.css';
 import {
     PoseLandmarker,
     FilesetResolver,
     DrawingUtils
 } from "https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0";
 
-<link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-</link>
-
 function App() {
     const [webcamRunning, setWebcamRunning] = useState(false);
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+    const poseLandmarkerRef = useRef(null);
 
     useEffect(() => {
-        const video = document.getElementById("webcam");
-        const canvasElement = document.getElementById("output_canvas");
-        const canvasCtx = canvasElement.getContext("2d");
-
-        const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
-
-        if (hasGetUserMedia()) {
-            const enableWebcamButton = document.getElementById("webcamButton");
-            enableWebcamButton.addEventListener("click", toggleWebcam);
-        } else {
-            console.warn("getUserMedia() is not supported by your browser");
+        async function createPoseLandmarker() {
+            const vision = await FilesetResolver.forVisionTasks(
+                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
+            );
+            poseLandmarkerRef.current = await PoseLandmarker.createFromOptions(vision, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
+                    delegate: "GPU"
+                },
+                runningMode: "VIDEO",
+                numPoses: 2
+            });
         }
+        createPoseLandmarker();
+    }, []);
 
-        async function predictWebcam() {
-            if (!webcamRunning) return;
-
-            console.log("predictWebcam function started");
-
-            try {
-                const predictions = await getPredictions(video);
-                console.log("Predictions received:", predictions);
-
-                canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-
-                predictions.forEach(prediction => {
-                    console.log("Drawing prediction:", prediction);
-                    // Your drawing logic here
-                });
-            } catch (error) {
-                console.error("Error during prediction:", error);
-            }
-
-            if (webcamRunning) {
-                window.requestAnimationFrame(predictWebcam);
-            }
-        }
-
-        function toggleWebcam(event) {
-            if (!webcamRunning) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(stream => {
-                        video.srcObject = stream;
-                        video.addEventListener("loadeddata", () => {
-                            setWebcamRunning(true);
-                            predictWebcam();
-                        });
-                    })
-                    .catch(err => {
-                        console.error("Error accessing webcam:", err);
-                    });
-            }
+    useEffect(() => {
+        if (webcamRunning) {
+            startWebcam();
         }
     }, [webcamRunning]);
 
+    async function startWebcam() {
+        if (!navigator.mediaDevices?.getUserMedia) {
+            console.warn("getUserMedia() is not supported by your browser");
+            return;
+        }
+
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        const canvasCtx = canvas.getContext("2d");
+        const drawingUtils = new DrawingUtils(canvasCtx);
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+            video.onloadeddata = () => predictWebcam();
+        } catch (error) {
+            console.error("Error accessing webcam:", error);
+        }
+    }
+
+    async function predictWebcam() {
+        if (!poseLandmarkerRef.current || !webcamRunning) return;
+
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        const canvasCtx = canvas.getContext("2d");
+        const drawingUtils = new DrawingUtils(canvasCtx);
+
+        async function detect() {
+            const startTimeMs = performance.now();
+            const results = await poseLandmarkerRef.current.detectForVideo(video, startTimeMs);
+            
+            canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+            results.landmarks.forEach(landmark => {
+                drawingUtils.drawLandmarks(landmark, {
+                    radius: (data) => DrawingUtils.lerp(data.from?.z, -0.15, 0.1, 5, 1)
+                });
+                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
+            });
+
+            if (webcamRunning) {
+                requestAnimationFrame(detect);
+            }
+        }
+
+        detect();
+    }
+
     return (
         <div>
-            <h2>Demo: Webcam continuous pose landmarks detection</h2>
-            <p>Stand in front of your webcam to get real-time pose landmarker detection.
-                Click <b>{webcamRunning ? "disable webcam" : "enable webcam"}</b> below and grant access to the webcam if prompted.</p>
-
-            <div id="liveView" className="videoView">
-                <button id="webcamButton" className="mdc-button mdc-button--raised" style={{ marginBottom: '20px' }}>
-                    <span className="mdc-button__ripple"></span>
-                    <span className="mdc-button__label">{webcamRunning ? "WEBCAM ENABLED" : "ENABLE WEBCAM"}</span>
-                </button>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                    <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <video id="webcam" style={{ width: '1280px', height: '720px' }} autoPlay playsInline></video>
-                        <canvas className="output_canvas" id="output_canvas" width="1280" height="720" style={{ position: 'absolute', left: '0px', top: '0px' }}></canvas>
-                    </div>
-                </div>
+            <h2>Demo: Webcam Continuous Pose Detection</h2>
+            <p>Click the button below to {webcamRunning ? "disable" : "enable"} the webcam.</p>
+            <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
+                {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
+            </button>
+            <div className="video-container">
+                <video ref={videoRef} autoPlay playsInline className="video" />
+                <canvas ref={canvasRef} className="canvas" />
             </div>
         </div>
     );
 }
 
-async function getPredictions(video) {
-    // Simulate an asynchronous operation
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([{ label: "Example", score: 0.9 }]);
-        }, 1000);
-    });
-}
-
 export default App;
-
