@@ -33,6 +33,8 @@ function App() {
     useEffect(() => {
         if (webcamRunning) {
             startWebcam();
+        } else {
+            stopWebcam();   
         }
     }, [webcamRunning]);
 
@@ -50,12 +52,32 @@ function App() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             video.srcObject = stream;
-            video.onloadeddata = () => predictWebcam();
+            video.onloadeddata = () => {
+                video.width = video.videoWidth;
+                video.height = video.videoHeight;
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                predictWebcam();
+            };
         } catch (error) {
             console.error("Error accessing webcam:", error);
         }
     }
 
+    function stopWebcam() {
+        const video = videoRef.current;
+        if (video && video.srcObject) {
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+
+            tracks.forEach(track => {
+                track.stop();
+            });
+
+            video.srcObject = null;
+        }
+    }
+    
     async function predictWebcam() {
         if (!poseLandmarkerRef.current || !webcamRunning) return;
 
