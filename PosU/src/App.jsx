@@ -66,13 +66,22 @@ function App() {
         async function detect() {
             const startTimeMs = performance.now();
             const results = await poseLandmarkerRef.current.detectForVideo(video, startTimeMs);
-            
+
             canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
             results.landmarks.forEach(landmark => {
                 drawingUtils.drawLandmarks(landmark, {
                     radius: (data) => DrawingUtils.lerp(data.from?.z, -0.15, 0.1, 0.5, 0.2) // circles setup
                 });
-                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS, {lineWidth: 0.5}); //initialize line thickness
+                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS, { lineWidth: 0.5 }); //initialize line thickness
+            });
+
+            // Send results to FastAPI backend
+            await fetch('http://localhost:8000/results', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(results),
             });
 
             if (webcamRunning) {
@@ -90,9 +99,9 @@ function App() {
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
-            <div className="video-container" style={{ position: 'relative', width: '640px', height: '480px' }}>
-                <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', height: '720px', position: 'absolute'}} />
-                <canvas ref={canvasRef} className="canvas" style={{width: '1280px', height: '720px', position: 'absolute'}}/>
+            <div className="video-container" style={{ position: 'relative', width: '1280px', height: '720px', marginTop: '20px' }}>
+                <video ref={videoRef} autoPlay playsInline className="video" style={{ width: '1280px', height: '720px', position: 'absolute', left: '0px', top: '0px' }} />
+                <canvas ref={canvasRef} className="canvas" style={{ width: '1280px', height: '720px', position: 'absolute', left: '0px', top: '0px' }} />
             </div>
         </div>
     );
