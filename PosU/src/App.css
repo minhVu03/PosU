@@ -40,3 +40,140 @@
 .read-the-docs {
   color: #888;
 }
+
+.mdc-button {
+  background-color: #BA71A2;
+  color: #F8EDF9;
+}
+
+/* Font class for Posu!*/
+/*.inria-sans-bold-italic {
+  font-family: "Inria Sans", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}*/
+
+/* Font class for Posu!*/
+
+/* <weight>: Use a value from 100 to 900*/
+/* <uniquifier>: Use a unique and descriptive class name*/
+
+.raleway-bold-700 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Basic styling */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  /*background-color: #f0f0f0;*/
+  background: radial-gradient(ellipse at top, #f0f0f0, transparent),
+              radial-gradient(ellipse at bottom, #BA71A2, transparent);
+}
+
+.fade-text {
+  font-size: 4rem;
+  color: #000;
+  animation: fadeColor 2.8s ease-in-out forwards;
+  top: 50%;
+  left: 50%;
+}
+
+.canvas { /*why do you take up space*/
+  height: 0;
+  width: 0;
+}
+
+/* pink to dark pink to purple */
+/* Keyframes for fading color */
+@keyframes fadeColor {
+  0% {
+    color: #F8EDF9; /* initial color */
+    /*opacity: 0;*/
+  }
+  25% {
+    color: #BA71A2; /* initial color */
+    /*opacity: 0;*/
+  }
+  50% {
+    color: #7E2A53;
+    /*opacity: 0.5;*/
+  }
+  100% {
+    color: #461D3A; /* final color */
+    /*opacity: 1;*/
+  }
+}
+
+.has-logo-bgd {
+  background-repeat: no-repeat;
+  background-image: url('/posu_logo_bgd.png');
+  background-size: 330.56px 300px; /*change this - keep small*/
+  background-position: center;
+  height: 240px;
+  color: 'white';
+  text-align: 'center';
+}
+
+.bgd {
+  background: radial-gradient(ellipse at top, #e66465, transparent),
+              radial-gradient(ellipse at bottom, #4d9f0c, transparent);
+}
+
+/*to lock image on home screen*/
+.lock-doodle {
+  left: 0;          /* Optional: Align to the left of the page */
+  bottom: 0;        /* Keeps the div at the bottom of the page */
+  width: 100%;      /* Optional: Make the div span the full width */
+  
+  z-index: 1000;    /* Optional: make sure it's under other content */
+
+  position: relative; /* Ensures child elements can stack on top */
+  height: 100vh; /* how much is displayed */
+  background-image: url('/posu_doodle_1.jpg');
+  background-position: bottom center;
+
+  background-size: 50%;
+  background-attachment: fixed; 
+  background-repeat: no-repeat;
+}
+
+.container1 {
+  left: 0;          /* Optional: Align to the left of the page */
+  bottom: 0;        /* Keeps the div at the bottom of the page */
+  width: 100%;      /* Optional: Make the div span the full width */
+  
+  z-index: 1000;    /* Optional: make sure it's under other content */
+
+  position: relative; /* Ensures child elements can stack on top */
+  height: 100vh; /* how much is displayed */
+  background-position: bottom center;
+}
+
+/*Unused*/
+.overlayX {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Example overlay */
+  z-index: 1; /* Ensures this div sits on top of the background */
+}
+
+.image {
+  background-size: 50%;
+  position: absolute;  /* Take the image out of the normal document flow */
+  bottom: 0;           /* Lock the image to the bottom of the container */
+  left: 50%;           /* Optional: Centers the image horizontally */
+  transform: translateX(-50%); /* Optional: Ensures precise centering */
+}
+
+
+

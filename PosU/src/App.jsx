@@ -95,9 +95,11 @@ function App() {
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
+
             <div className="video-container" style={{ padding: '10px', margin: '0'}}>
                 <video ref={videoRef} autoPlay playsInline className="video" />
                 <canvas ref={canvasRef} className="canvas" />
+
             </div>
         </div>
     );
