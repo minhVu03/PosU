@@ -24,7 +24,7 @@ function App() {
                     delegate: "GPU"
                 },
                 runningMode: "VIDEO",
-                numPoses: 5 //NUMBER OF PEOPLE IT WILL DETECT
+                numPoses: 1 //NUMBER OF PEOPLE IT WILL DETECT
             });
         }
         createPoseLandmarker();
@@ -77,7 +77,12 @@ function App() {
             });
     
             // Send results to backend
-            if (sendPoseData(results, posen) == 1) posen++;
+            if(!results || Object.keys(results).length === 0){
+                console.log("Nothing to detect!")
+            } else {
+                if (sendPoseData(results, posen) == 1) posen++;
+            }
+            
     
             if (webcamRunning) {
                 requestAnimationFrame(detect);
@@ -149,6 +154,8 @@ async function sendPoseData(results, posen) {
         //read data, determine return value 1 or 0
         if (data.success == 1) return 1;
     }
+
+    return 0;
 }
 
 export default App;
