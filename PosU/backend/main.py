@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from pose_api import router as pose_router  # Adjust based on your actual file structure
+from pose_api import router as pose_router 
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Pose Detection API")
@@ -10,9 +10,9 @@ app.include_router(pose_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow requests from this origin
-    allow_credentials=True,  # Allow cookies and credentials
+    allow_credentials=True, 
     allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
+    allow_headers=["*"],
 )
 
 
