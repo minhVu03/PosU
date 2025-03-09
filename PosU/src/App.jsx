@@ -100,13 +100,13 @@ function App() {
                     justifyContent: 'center',  // Horizontally center the content
                     alignItems: 'center',      // Vertically center the content
                     letterSpacing: '10px',
-                    margin: 0}}>PosU!</h2>
+                    margin: 0,}}>PosU!</h2>
             <p>{webcamRunning ? "" : "Ready to play?"} </p>
-            <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
+            <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised" >
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
-
-            <div className="video-container" style={{ position: 'relative', margin:'auto', width: '1280px', height: '720px' }}>
+    
+            <div className="video-container" style={{ position: 'relative', margin:'20px auto 0', width: '1280px', height: '720px'}}>
                 <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}} />
                 <canvas ref={canvasRef} className="canvas" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}}/>
             </div>
