@@ -15,4 +15,5 @@ open another terminal and run the back end:\\
 cd into posU/posU/backend
 
 ```pip install -r requirements.txt```
+
 ```python main.py```
