@@ -138,8 +138,8 @@ function App() {
                     justifyContent: 'center',  // Horizontally center the content
                     alignItems: 'center',      // Vertically center the content
                     letterSpacing: '10px',
-                    margin: 0,}}>PosU!</h2>
-            <p style={{ color: 'black', fontSize: '20px', fontFamily: 'Cute Font'}}>{webcamRunning ? "" : "Ready to play?"} </p>
+                    margin: 0,}}>pOSU!</h2>
+            <h4 className="raleway-medium-500" style={{fontSize: '20px'}}>{webcamRunning ? "" : "ready to play?"} </h4>
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised" >
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>

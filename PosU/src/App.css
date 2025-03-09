@@ -44,6 +44,9 @@
 .mdc-button {
   background-color: #BA71A2;
   color: #F8EDF9;
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
 }
 
 /* Font class for Posu!*/
@@ -64,6 +67,14 @@
   font-weight: 700;
   font-style: italic;
 }
+
+.raleway-medium-500 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  color:#461D3A
+}
+
 
 /* Basic styling */
 body {
