@@ -139,11 +139,11 @@ function App() {
                     alignItems: 'center',      // Vertically center the content
                     letterSpacing: '10px',
                     margin: 0,}}>PosU!</h2>
-            <p style={{ color: 'black', fontSize: '20px' }}>{webcamRunning ? "" : "Ready to play?"} </p>
+            <p style={{ color: 'black', fontSize: '20px', fontFamily: 'Cute Font'}}>{webcamRunning ? "" : "Ready to play?"} </p>
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised" >
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
-            <p style={{ color: 'black', fontSize: '20px' }}>Current score: {poseIndex}</p> 
+            <p style={{ color: 'black', fontSize: '20px', fontFamily: 'Cute Font'}}>Current score: {poseIndex}</p> 
             <button onClick={resetPoints} className="mdc-button mdc-button--raised">
                 REPLAY
             </button>
@@ -153,6 +153,7 @@ function App() {
                 {webcamRunning && poseIndex === 0 && <img src="/Pose0.png" alt="Overlay 0" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
                 {webcamRunning && poseIndex === 1 && <img src="/Pose1.png" alt="Overlay 1" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
                 {webcamRunning && poseIndex === 2 && <img src="/Pose2.png" alt="Overlay 2" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
+                {poseIndex === 3 && <img src="/end.jpg" alt="end_screen" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
             </div>
         </div>
     );
