@@ -8,12 +8,14 @@ Using live motion-tracking through a webcam, pOSU!! guides users through a serie
 
 How to run it:
 
-cd into posU and run 
-```npm run dev```
-
-open another terminal and run the back end:\\
+Open another terminal and run the back end:\\
 cd into posU/posU/backend
 
 ```pip install -r requirements.txt```
 
 ```python main.py```
+
+cd into posU/posU and run the fron-end:
+```npm run dev```
+
+
