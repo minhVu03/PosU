@@ -11,6 +11,7 @@ function App() {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const poseLandmarkerRef = useRef(null);
+    let posen = 0;
 
     useEffect(() => {
         async function createPoseLandmarker() {
@@ -76,7 +77,7 @@ function App() {
             });
     
             // Send results to backend
-            sendPoseData(results);
+            if (sendPoseData(results, posen) == 1) posen++;
     
             if (webcamRunning) {
                 requestAnimationFrame(detect);
@@ -102,22 +103,52 @@ function App() {
     );
 }
 
-async function sendPoseData(results) {
-    console.log("Landmark object", results.landmarks[0])
-    console.log("timestamps", performance.now())
-    const response = await fetch("http://localhost:5001/process_pose", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            landmarks: results.landmarks[0],
-            timestamp: performance.now()
-        })
-    });
+async function sendPoseData(results, posen) {
+    let response;
+    let data;
 
-    const data = await response.json();
-    console.log("Response from FastAPI:", data);
+    if (posen == 0) {
+        response = await fetch("http://localhost:5001/check_pose0", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                landmarks: results.landmarks[0],
+                timestamp: performance.now()
+            })
+        });
+
+        data = await response.json();
+        //read data, determine return value 1 or 0
+        if (data.success == 1) return 1;
+    } 
+    if (posen == 1) {
+        response = await fetch("http://localhost:5001/check_pose1", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                landmarks: results.landmarks[0],
+                timestamp: performance.now()
+            })
+        });
+
+        data = await response.json();
+        //read data, determine return value 1 or 0
+        if (data.success == 1) return 1;
+    }
+    if (posen == 2) {
+        response = await fetch("http://localhost:5001/check_pose2", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                landmarks: results.landmarks[0],
+                timestamp: performance.now()
+            })
+        });
+
+        data = await response.json();
+        //read data, determine return value 1 or 0
+        if (data.success == 1) return 1;
+    }
 }
-
-
 
 export default App;
