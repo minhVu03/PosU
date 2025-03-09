@@ -9,7 +9,7 @@ import {
 function App() {
     const [webcamRunning, setWebcamRunning] = useState(false);
     const videoRef = useRef(null);
-    const canvasRef = useRef(null);git
+    const canvasRef = useRef(null);
     const poseLandmarkerRef = useRef(null);
 
     useEffect(() => {
