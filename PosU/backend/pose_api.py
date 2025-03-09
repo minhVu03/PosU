@@ -22,12 +22,12 @@ async def check_pose0(request: Request):
     rightElbowPoint = np.array((df.iloc[13]["landmarks"]["x"], df.iloc[13]["landmarks"]["y"]))
     rightWrist = np.array((df.iloc[15]["landmarks"]["x"], df.iloc[15]["landmarks"]["y"]))
 
-    point1 = np.array((0.8, 0.2)) #remember this for front end
-    point2 = np.array((0.8, 0.7)) #remember this for front end
+    point1 = np.array((0.7, 0.3)) #remember this for front end
+    point2 = np.array((0.7, 0.7)) #remember this for front end
 
     dist1 = np.linalg.norm(rightElbowPoint - point1)
     dist2 = np.linalg.norm(rightWrist - point2)
-    if(dist1 < 0.5 and dist2 < 0.5):
+    if(dist1 < 0.4 and dist2 < 0.4):
         success = 1
         print("POSE 1 COMPLETED")
     
@@ -63,7 +63,7 @@ async def check_pose1(request: Request):
 
     dist1 = np.linalg.norm(rightElbowPoint - point1) #WRIST NOT ELBOW
     dist2 = np.linalg.norm(rightWrist - point2)
-    if(dist1 < 0.4 and dist2 < 0.4):
+    if(dist1 < 0.4 and dist2 < 0.3):
         success = 1
     
     # Example: Compute average visibility
@@ -92,12 +92,12 @@ async def check_pose2(request: Request):
     rightElbowPoint = np.array((df.iloc[14]["landmarks"]["x"], df.iloc[14]["landmarks"]["y"]))
     rightWrist = np.array((df.iloc[16]["landmarks"]["x"], df.iloc[16]["landmarks"]["y"]))
 
-    point1 = np.array((0.2, 0.2)) #remember this for front end
-    point2 = np.array((0.2, 0.8)) #remember this for front end
+    point1 = np.array((0.3, 0.3)) #remember this for front end
+    point2 = np.array((0.3, 0.7)) #remember this for front end
 
     dist1 = np.linalg.norm(rightElbowPoint - point1)
     dist2 = np.linalg.norm(rightWrist - point2)
-    if(dist1 < 0.5 and dist2 < 0.5):
+    if(dist1 < 0.4 and dist2 < 0.4):
         success = 1
     
     # Example: Compute average visibility

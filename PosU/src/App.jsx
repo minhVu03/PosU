@@ -114,12 +114,21 @@ function App() {
                 }
             }
 
+            if (posenRef.current === 3) {
+                setWebcamRunning(false);
+            }
+
             if (webcamRunning) {
                 requestAnimationFrame(detect);
             }
         }
 
         detect();
+    }
+
+    function resetPoints() {
+        posenRef.current = 0;
+        setPoseIndex(0);
     }
 
     return (
@@ -130,12 +139,14 @@ function App() {
                     alignItems: 'center',      // Vertically center the content
                     letterSpacing: '10px',
                     margin: 0,}}>PosU!</h2>
-            <p>{webcamRunning ? "" : "Ready to play?"} </p>
+            <p style={{ color: 'black', fontSize: '20px' }}>{webcamRunning ? "" : "Ready to play?"} </p>
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised" >
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
-            <p style={{ color: 'black', fontSize: '24px' }}>Current score: {poseIndex}</p> 
-    
+            <p style={{ color: 'black', fontSize: '20px' }}>Current score: {poseIndex}</p> 
+            <button onClick={resetPoints} className="mdc-button mdc-button--raised">
+                REPLAY
+            </button>
             <div className="video-container" style={{ position: 'relative', margin:'20px auto 0', width: '1280px', height: '720px'}}>
                 <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}} />
                 <canvas ref={canvasRef} className="canvas" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}}/>
