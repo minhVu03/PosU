@@ -34,7 +34,7 @@ async def check_pose0(request: Request):
     point2 = np.array((0.8, 0.7)) #remember this for front end
 
     dist1 = np.linalg.norm(rightElbowPoint - point1)
-    dist2 = np.linalg.norm(rightElbowPoint - point2)
+    dist2 = np.linalg.norm(rightWrist - point2)
     if(dist1 < 0.05 and dist2 < 0.05):
         success = 1
         print("POSE 1 COMPLETED")
@@ -78,7 +78,7 @@ async def check_pose1(request: Request):
     point2 = np.array((0.5, 0.6)) #remember this for front end
 
     dist1 = np.linalg.norm(rightElbowPoint - point1) #WRIST NOT ELBOW
-    dist2 = np.linalg.norm(rightElbowPoint - point2)
+    dist2 = np.linalg.norm(rightWrist - point2)
     if(dist1 < 0.05 and dist2 < 0.05):
         success = 1
     
@@ -120,7 +120,7 @@ async def check_pose2(request: Request):
     point2 = np.array((0.3, 0.2)) #remember this for front end
 
     dist1 = np.linalg.norm(rightElbowPoint - point1)
-    dist2 = np.linalg.norm(rightElbowPoint - point2)
+    dist2 = np.linalg.norm(rightWrist - point2)
     if(dist1 < 0.05 and dist2 < 0.05):
         success = 1
     
