@@ -1,4 +1,4 @@
-# Posu-
+# pOSU!
 Make your Physiotherapy sessions fun!
 
 Existing physiotherapy exercises that rely on visual simulations often require expensive VR headsets, making them out of reach for many people. That's why we created pOSU!—a web-based, motion-tracking web app that can run on any device with a simple webcam. We also wanted to make the experience feel fun and rewarding for users by introducing a point-based game system.
