@@ -105,6 +105,7 @@ function App() {
 async function sendPoseData(results) {
     console.log("Landmark object", results.landmarks[0])
     console.log("timestamps", performance.now())
+
     const response = await fetch("http://localhost:5001/process_pose", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -115,6 +116,7 @@ async function sendPoseData(results) {
     });
 
     const data = await response.json();
+    
     console.log("Response from FastAPI:", data);
 }
 
