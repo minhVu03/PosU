@@ -85,7 +85,7 @@ function App() {
 
     return (
         <div>
-            <h2 className="inria-sans-bold-italic fade-text has-logo-bgd"
+            <h2 className="raleway-bold-700 fade-text has-logo-bgd"
             style = {{display: 'flex',         // Use flexbox to align content
                     justifyContent: 'center',  // Horizontally center the content
                     alignItems: 'center',      // Vertically center the content
