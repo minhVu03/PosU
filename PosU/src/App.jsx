@@ -6,12 +6,17 @@ import {
     DrawingUtils
 } from "https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0";
 
+// import Image0 from './public/Pose0.png';
+// import Image1 from './public/Pose1.png';
+// import Image2 from './public/Pose2.png';
+
 function App() {
     const [webcamRunning, setWebcamRunning] = useState(false);
+    const [poseIndex, setPoseIndex] = useState(0); // State to keep track of posen
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const poseLandmarkerRef = useRef(null);
-    let posen = 0;
+    const posenRef = useRef(0); // Use a ref to keep track of posen
 
     useEffect(() => {
         async function createPoseLandmarker() {
@@ -102,7 +107,11 @@ function App() {
             if(!results || Object.keys(results).length === 0){
                 console.log("Nothing to detect!")
             } else {
-                if (sendPoseData(results, posen) == 1) posen++;
+                const success = await sendPoseData(results, posenRef.current);
+                if (success === 1) {
+                    posenRef.current++;
+                    setPoseIndex(posenRef.current); // Update state with new posen value
+                }
             }
 
             if (webcamRunning) {
@@ -125,10 +134,14 @@ function App() {
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised" >
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
+            <p style={{ color: 'black', fontSize: '24px' }}>Current score: {poseIndex}</p> 
     
             <div className="video-container" style={{ position: 'relative', margin:'20px auto 0', width: '1280px', height: '720px'}}>
                 <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}} />
                 <canvas ref={canvasRef} className="canvas" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}}/>
+                {webcamRunning && poseIndex === 0 && <img src="/Pose0.png" alt="Overlay 0" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
+                {webcamRunning && poseIndex === 1 && <img src="/Pose1.png" alt="Overlay 1" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
+                {webcamRunning && poseIndex === 2 && <img src="/Pose2.png" alt="Overlay 2" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
             </div>
         </div>
     );
@@ -149,7 +162,7 @@ function App() {
     
             data = await response.json();
             //read data, determine return value 1 or 0
-            if (data.success == 1) return 1;
+            if (data["success"] == 1) return 1;
         } 
         if (posen == 1) {
             response = await fetch("http://localhost:5001/check_pose1", {
