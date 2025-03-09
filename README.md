@@ -16,6 +16,7 @@ cd into posU/posU/backend
 ```python main.py```
 
 Open another terminal and run the front-end
+
 cd into posU/posU and run the front-end:
 ```npm run dev```
 
