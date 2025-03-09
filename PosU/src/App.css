@@ -102,10 +102,9 @@ body {
   background-image: url('/posu_logo_bgd.png');
   background-size: 330.56px 300px; /*change this - keep small*/
   background-position: center;
-  height: 300px;
+  height: 240px;
   color: 'white';
   text-align: 'center';
-  padding: '20px';
 }
 
 

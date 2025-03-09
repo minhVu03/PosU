@@ -89,12 +89,13 @@ function App() {
             style = {{display: 'flex',         // Use flexbox to align content
                     justifyContent: 'center',  // Horizontally center the content
                     alignItems: 'center',      // Vertically center the content
-                    letterSpacing: '10px'}}>PosU!</h2>
+                    letterSpacing: '10px',
+                    margin: 0}}>PosU!</h2>
             <p>{webcamRunning ? "" : "Ready to play?"} </p>
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
-            <div className="video-container" style={{ padding: '10px', margin: 'auto'}}>
+            <div className="video-container" style={{ padding: '10px', margin: '0'}}>
                 <video ref={videoRef} autoPlay playsInline className="video" />
                 <canvas ref={canvasRef} className="canvas" />
             </div>
