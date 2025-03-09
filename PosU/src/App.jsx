@@ -57,12 +57,12 @@ function App() {
 
     async function predictWebcam() {
         if (!poseLandmarkerRef.current || !webcamRunning) return;
-
+    
         const video = videoRef.current;
         const canvas = canvasRef.current;
         const canvasCtx = canvas.getContext("2d");
         const drawingUtils = new DrawingUtils(canvasCtx);
-
+    
         async function detect() {
             const startTimeMs = performance.now();
             const results = await poseLandmarkerRef.current.detectForVideo(video, startTimeMs);
@@ -70,18 +70,22 @@ function App() {
             canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
             results.landmarks.forEach(landmark => {
                 drawingUtils.drawLandmarks(landmark, {
-                    radius: (data) => DrawingUtils.lerp(data.from?.z, -0.15, 0.1, 0.5, 0.2) // circles setup
+                    radius: (data) => DrawingUtils.lerp(data.from?.z, -0.15, 0.1, 0.5, 0.2) 
                 });
-                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS, {lineWidth: 0.5}); //initialize line thickness
+                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS, { lineWidth: 0.5 });
             });
-
+    
+            // Send results to backend
+            sendPoseData(results);
+    
             if (webcamRunning) {
                 requestAnimationFrame(detect);
             }
         }
-
+    
         detect();
     }
+    
 
     return (
         <div>
@@ -90,12 +94,30 @@ function App() {
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
-            <div className="video-container" style={{ position: 'relative', width: '640px', height: '480px' }}>
-                <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', height: '720px', position: 'absolute'}} />
-                <canvas ref={canvasRef} className="canvas" style={{width: '1280px', height: '720px', position: 'absolute'}}/>
+            <div className="video-container" style={{ position: 'relative', margin:'auto', width: '1280px', height: '720px' }}>
+                <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}} />
+                <canvas ref={canvasRef} className="canvas" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}}/>
             </div>
         </div>
     );
 }
+
+async function sendPoseData(results) {
+    console.log("Landmark object", results.landmarks[0])
+    console.log("timestamps", performance.now())
+    const response = await fetch("http://localhost:5001/process_pose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            landmarks: results.landmarks[0],
+            timestamp: performance.now()
+        })
+    });
+
+    const data = await response.json();
+    console.log("Response from FastAPI:", data);
+}
+
+
 
 export default App;
