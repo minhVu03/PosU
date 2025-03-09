@@ -86,6 +86,7 @@ body {
   /*background-color: #f0f0f0;*/
   background: radial-gradient(ellipse at top, #f0f0f0, transparent),
               radial-gradient(ellipse at bottom, #BA71A2, transparent);
+              background-image: url('/background.png');
 }
 
 .fade-text {

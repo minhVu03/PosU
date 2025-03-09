@@ -39,7 +39,7 @@ function App() {
         if (webcamRunning) {
             startWebcam();
         } else {
-            stopWebcam();   
+            stopWebcam();
         }
     }, [webcamRunning]);
 
@@ -82,7 +82,7 @@ function App() {
             video.srcObject = null;
         }
     }
-    
+
     async function predictWebcam() {
         if (!poseLandmarkerRef.current || !webcamRunning) return;
 
@@ -94,17 +94,17 @@ function App() {
         async function detect() {
             const startTimeMs = performance.now();
             const results = await poseLandmarkerRef.current.detectForVideo(video, startTimeMs);
-            
+
             canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
             results.landmarks.forEach(landmark => {
                 drawingUtils.drawLandmarks(landmark, {
                     radius: (data) => DrawingUtils.lerp(data.from?.z, -0.15, 0.1, 0.5, 0.2) // circles setup
                 });
-                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS, {lineWidth: 0.5}); //initialize line thickness
+                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS, { lineWidth: 0.5 }); //initialize line thickness
             });
 
             // Send results to backend
-            if(!results || Object.keys(results).length === 0){
+            if (!results || Object.keys(results).length === 0) {
                 console.log("Nothing to detect!")
             } else {
                 const success = await sendPoseData(results, posenRef.current);
@@ -134,26 +134,35 @@ function App() {
     return (
         <div>
             <h2 className="raleway-bold-700 fade-text has-logo-bgd"
-            style = {{display: 'flex',         // Use flexbox to align content
+                style={{
+                    display: 'flex',         // Use flexbox to align content
                     justifyContent: 'center',  // Horizontally center the content
                     alignItems: 'center',      // Vertically center the content
                     letterSpacing: '10px',
-                    margin: 0,}}>pOSU!</h2>
-            <h4 className="raleway-medium-500" style={{fontSize: '20px'}}>{webcamRunning ? "" : "ready to play?"} </h4>
-            <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised" >
-                {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
-            </button>
-            <p style={{ color: 'black', fontSize: '20px', fontFamily: 'Cute Font'}}>Current score: {poseIndex}</p> 
-            <button onClick={resetPoints} className="mdc-button mdc-button--raised">
-                REPLAY
-            </button>
-            <div className="video-container" style={{ position: 'relative', margin:'20px auto 0', width: '1280px', height: '720px'}}>
-                <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}} />
-                <canvas ref={canvasRef} className="canvas" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}}/>
+                    margin: 0,
+                }}>pOSU!</h2>
+            <h4 className="raleway-medium-500" style={{ fontSize: '20px' }}>{webcamRunning ? "" : "READY TO PLAY?"} </h4>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', margin: '10px 0' }}>
+                <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
+                    {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
+                </button>
+                <button onClick={resetPoints} className="mdc-button mdc-button--raised">
+                    REPLAY
+                </button>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '1px 0' }}>
+                {poseIndex === 0 && <img src="/bar0.png" alt="score 0" style={{ width: '50%', height: 'auto' }} />}
+                {poseIndex === 1 && <img src="/bar1.png" alt="score 1" style={{ width: '50%', height: 'auto' }} />}
+                {poseIndex === 2 && <img src="/bar2.png" alt="score 2" style={{ width: '50%', height: 'auto' }} />}
+                {poseIndex === 3 && <img src="/bar3.png" alt="score 3" style={{ width: '50%', height: 'auto' }} />}
+            </div>
+            <div className="video-container" style={{ position: 'relative', margin: '20px auto 0', width: '1280px', height: '720px' }}>
+                <video ref={videoRef} autoPlay playsInline className="video" style={{ width: '1280px', margin: 'auto', height: '720px', position: 'absolute', top: '0px', left: '0px' }} />
+                <canvas ref={canvasRef} className="canvas" style={{ width: '1280px', margin: 'auto', height: '720px', position: 'absolute', top: '0px', left: '0px' }} />
                 {webcamRunning && poseIndex === 0 && <img src="/Pose0.png" alt="Overlay 0" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
                 {webcamRunning && poseIndex === 1 && <img src="/Pose1.png" alt="Overlay 1" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
                 {webcamRunning && poseIndex === 2 && <img src="/Pose2.png" alt="Overlay 2" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
-                {poseIndex === 3 && <img src="/end.jpg" alt="end_screen" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />}
+                {poseIndex === 3 && <img src="/end.jpg" alt="end_screen" style={{ position: 'absolute', top: 20, left: 0, width: '100%', height: '100%' }} />}
             </div>
         </div>
     );
@@ -161,7 +170,7 @@ function App() {
     async function sendPoseData(results, posen) {
         let response;
         let data;
-    
+
         if (posen == 0) {
             response = await fetch("http://localhost:5001/check_pose0", {
                 method: "POST",
@@ -171,11 +180,11 @@ function App() {
                     timestamp: performance.now()
                 })
             });
-    
+
             data = await response.json();
             //read data, determine return value 1 or 0
             if (data["success"] == 1) return 1;
-        } 
+        }
         if (posen == 1) {
             response = await fetch("http://localhost:5001/check_pose1", {
                 method: "POST",
@@ -185,7 +194,7 @@ function App() {
                     timestamp: performance.now()
                 })
             });
-    
+
             data = await response.json();
             //read data, determine return value 1 or 0
             if (data.success == 1) return 1;
@@ -199,12 +208,12 @@ function App() {
                     timestamp: performance.now()
                 })
             });
-    
+
             data = await response.json();
             //read data, determine return value 1 or 0
             if (data.success == 1) return 1;
         }
-    
+
         return 0;
     }
 }
