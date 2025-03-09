@@ -8,7 +8,6 @@ Using live motion-tracking through a webcam, pOSU!! guides users through a serie
 
 How to run it:
 
-Open another terminal and run the back end:
 
 cd into posU/posU/backend
 
@@ -16,7 +15,8 @@ cd into posU/posU/backend
 
 ```python main.py```
 
-cd into posU/posU and run the fron-end:
+Open another terminal and run the front-end
+cd into posU/posU and run the front-end:
 ```npm run dev```
 
 
