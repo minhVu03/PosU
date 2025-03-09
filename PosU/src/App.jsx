@@ -11,6 +11,7 @@ function App() {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const poseLandmarkerRef = useRef(null);
+    let posen = 0;
 
     useEffect(() => {
         async function createPoseLandmarker() {
@@ -23,7 +24,7 @@ function App() {
                     delegate: "GPU"
                 },
                 runningMode: "VIDEO",
-                numPoses: 5 //NUMBER OF PEOPLE IT WILL DETECT
+                numPoses: 1 //NUMBER OF PEOPLE IT WILL DETECT
             });
         }
         createPoseLandmarker();
@@ -57,12 +58,12 @@ function App() {
 
     async function predictWebcam() {
         if (!poseLandmarkerRef.current || !webcamRunning) return;
-
+    
         const video = videoRef.current;
         const canvas = canvasRef.current;
         const canvasCtx = canvas.getContext("2d");
         const drawingUtils = new DrawingUtils(canvasCtx);
-
+    
         async function detect() {
             const startTimeMs = performance.now();
             const results = await poseLandmarkerRef.current.detectForVideo(video, startTimeMs);
@@ -70,18 +71,27 @@ function App() {
             canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
             results.landmarks.forEach(landmark => {
                 drawingUtils.drawLandmarks(landmark, {
-                    radius: (data) => DrawingUtils.lerp(data.from?.z, -0.15, 0.1, 0.5, 0.2) // circles setup
+                    radius: (data) => DrawingUtils.lerp(data.from?.z, -0.15, 0.1, 0.5, 0.2) 
                 });
-                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS, {lineWidth: 0.5}); //initialize line thickness
+                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS, { lineWidth: 0.5 });
             });
-
+    
+            // Send results to backend
+            if(!results || Object.keys(results).length === 0){
+                console.log("Nothing to detect!")
+            } else {
+                if (sendPoseData(results, posen) == 1) posen++;
+            }
+            
+    
             if (webcamRunning) {
                 requestAnimationFrame(detect);
             }
         }
-
+    
         detect();
     }
+    
 
     return (
         <div>
@@ -95,12 +105,63 @@ function App() {
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
-            <div className="video-container" style={{ padding: '10px', margin: '0'}}>
-                <video ref={videoRef} autoPlay playsInline className="video" />
-                <canvas ref={canvasRef} className="canvas" />
+
+            <div className="video-container" style={{ position: 'relative', margin:'auto', width: '1280px', height: '720px' }}>
+                <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}} />
+                <canvas ref={canvasRef} className="canvas" style={{width: '1280px', margin:'auto', height: '720px', position: 'absolute', top:'0px', left:'0px'}}/>
             </div>
         </div>
     );
+}
+
+async function sendPoseData(results, posen) {
+    let response;
+    let data;
+
+    if (posen == 0) {
+        response = await fetch("http://localhost:5001/check_pose0", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                landmarks: results.landmarks[0],
+                timestamp: performance.now()
+            })
+        });
+
+        data = await response.json();
+        //read data, determine return value 1 or 0
+        if (data.success == 1) return 1;
+    } 
+    if (posen == 1) {
+        response = await fetch("http://localhost:5001/check_pose1", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                landmarks: results.landmarks[0],
+                timestamp: performance.now()
+            })
+        });
+
+        data = await response.json();
+        //read data, determine return value 1 or 0
+        if (data.success == 1) return 1;
+    }
+    if (posen == 2) {
+        response = await fetch("http://localhost:5001/check_pose2", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                landmarks: results.landmarks[0],
+                timestamp: performance.now()
+            })
+        });
+
+        data = await response.json();
+        //read data, determine return value 1 or 0
+        if (data.success == 1) return 1;
+    }
+
+    return 0;
 }
 
 export default App;
