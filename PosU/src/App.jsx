@@ -85,14 +85,18 @@ function App() {
 
     return (
         <div>
-            <h2>Demo: Webcam Continuous Pose Detection</h2>
-            <p>Click the button below to {webcamRunning ? "disable" : "enable"} the webcam.</p>
+            <h2 className="inria-sans-bold-italic fade-text has-logo-bgd"
+            style = {{display: 'flex',         // Use flexbox to align content
+                    justifyContent: 'center',  // Horizontally center the content
+                    alignItems: 'center',      // Vertically center the content
+                    letterSpacing: '10px'}}>PosU!</h2>
+            <p>{webcamRunning ? "" : "Ready to play?"} </p>
             <button onClick={() => setWebcamRunning(!webcamRunning)} className="mdc-button mdc-button--raised">
                 {webcamRunning ? "DISABLE WEBCAM" : "ENABLE WEBCAM"}
             </button>
-            <div className="video-container" style={{ position: 'relative', width: '640px', height: '480px' }}>
-                <video ref={videoRef} autoPlay playsInline className="video" style={{width: '1280px', height: '720px', position: 'absolute'}} />
-                <canvas ref={canvasRef} className="canvas" style={{width: '1280px', height: '720px', position: 'absolute'}}/>
+            <div className="video-container" style={{ padding: '10px', margin: 'auto'}}>
+                <video ref={videoRef} autoPlay playsInline className="video" />
+                <canvas ref={canvasRef} className="canvas" />
             </div>
         </div>
     );

@@ -40,3 +40,72 @@
 .read-the-docs {
   color: #888;
 }
+
+.mdc-button {
+  background-color: #BA71A2;
+  color: #F8EDF9;
+}
+
+/* Font class for Posu!*/
+.inria-sans-bold-italic {
+  font-family: "Inria Sans", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Basic styling */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+.fade-text {
+  font-size: 4rem;
+  color: #000;
+  animation: fadeColor 2.8s ease-in-out forwards;
+  top: 50%;
+  left: 50%;
+}
+
+.canvas { /*why do you take up space*/
+  height: 0;
+  width: 0;
+}
+
+/* pink to dark pink to purple */
+/* Keyframes for fading color */
+@keyframes fadeColor {
+  0% {
+    color: #F8EDF9; /* initial color */
+    /*opacity: 0;*/
+  }
+  25% {
+    color: #BA71A2; /* initial color */
+    /*opacity: 0;*/
+  }
+  50% {
+    color: #7E2A53;
+    /*opacity: 0.5;*/
+  }
+  100% {
+    color: #461D3A; /* final color */
+    /*opacity: 1;*/
+  }
+}
+
+.has-logo-bgd {
+  background-repeat: no-repeat;
+  background-image: url('/posu_logo_bgd.png');
+  background-size: 330.56px 300px; /*change this - keep small*/
+  background-position: center;
+  height: 300px;
+  color: 'white';
+  text-align: 'center';
+  padding: '20px';
+}
+
+
